@@ -1,0 +1,35 @@
+#set variable values
+mean_data<- 6
+mean_prior<- 4
+sd_data<- 1.5
+sd_prior<- 0.8 
+n<- 20
+
+#generate prior and data distribtuions
+x<- seq(0, 10, length.out = n)
+data<- dnorm(x, mean= mean_data,sd= sd_data)
+prior<- dnorm(x, mean= mean_prior, sd= sd_prior)
+
+#calculate mean, sd of posterior based on the formulae
+
+sd_post<- sqrt(((sd_data^2)*(sd_prior^2))/((sd_data^2)+(n*(sd_prior^2))))
+
+#to calculate the mean (x-bar) of the data, generate a random normal distribution
+set.seed(123)
+random_data<- rnorm(n, mean = mean_data, sd = sd_data)
+
+mu_denom<- (sd_data^2)+(n*(sd_prior^2))
+num1<- (sd_data^2)*mean_prior
+num2<- n* mean(random_data)*(sd_prior^2)
+
+mean_post<- (num1+num2)/mu_denom
+
+#generate posterior distribution
+
+posterior<- dnorm(x, mean= mean_post, sd = sd_post)
+  
+#plot graphs
+plot(0,0, xlim= c(0,10), ylim=c(0,1), xlab='X', ylab='Probability Density')
+lines(x, data, type = "l", col = "red")
+lines(x, prior, type = "l", col = "green")
+lines(x, posterior, type = "l", col = "blue")
